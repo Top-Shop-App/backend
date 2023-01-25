@@ -1,14 +1,12 @@
-package com.example.topshopapi.models;
+package com.example.topshopapi.entitys;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 @Entity
-@Table(name = "user_payment")
+@Table(name = "user_payments")
 public class UserPayment {
 
     // Fields

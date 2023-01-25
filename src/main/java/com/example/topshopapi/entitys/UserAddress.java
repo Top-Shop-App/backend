@@ -1,4 +1,4 @@
-package com.example.topshopapi.models;
+package com.example.topshopapi.entitys;
 
 import javax.persistence.*;
 
@@ -26,7 +26,8 @@ public class UserAddress {
     @Column(name = "country", nullable = false)
     private String country;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
     private User user;
 
     // Constructors

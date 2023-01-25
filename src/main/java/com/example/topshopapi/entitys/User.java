@@ -1,4 +1,4 @@
-package com.example.topshopapi.models;
+package com.example.topshopapi.entitys;
 
 
 import javax.persistence.*;
