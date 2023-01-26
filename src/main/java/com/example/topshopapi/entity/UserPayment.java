@@ -1,4 +1,4 @@
-package com.example.topshopapi.entitys;
+package com.example.topshopapi.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
