@@ -26,8 +26,8 @@ public class UserAddress {
     @Column(name = "country", nullable = false)
     private String country;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     // Constructors

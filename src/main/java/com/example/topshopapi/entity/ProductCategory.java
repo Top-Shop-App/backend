@@ -14,16 +14,12 @@ public class ProductCategory {
     @Column(name = "category_name", nullable = false)
     private String categoryName;
 
-    @Column(name = "category_desc", nullable = false)
-    private String categoryDesc;
-
     // Constructors
     public ProductCategory() {}
 
     public ProductCategory(long id, String categoryName, String categoryDesc) {
         this.id = id;
         this.categoryName = categoryName;
-        this.categoryDesc = categoryDesc;
     }
 
     // Getters & Setters
@@ -41,13 +37,5 @@ public class ProductCategory {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
-    }
-
-    public String getCategoryDesc() {
-        return categoryDesc;
-    }
-
-    public void setCategoryDesc(String categoryDesc) {
-        this.categoryDesc = categoryDesc;
     }
 }

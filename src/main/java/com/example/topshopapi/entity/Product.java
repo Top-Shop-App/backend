@@ -28,7 +28,7 @@ public class Product {
     @JoinColumn(name = "category_id", nullable = false, referencedColumnName = "id")
     private ProductCategory productCategory;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "inventory_id", nullable = false, referencedColumnName = "id")
     private ProductInventory productInventory;
 

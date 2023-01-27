@@ -14,12 +14,17 @@ public class ProductInventory {
     @Column(name = "quantity", nullable = false)
     private int quantity;
 
+    @OneToOne(orphanRemoval = true)
+    @JoinColumn(name = "product_id", nullable = false, unique = true)
+    private Product product;
+
     // Constructors
     public ProductInventory() {}
 
-    public ProductInventory(long id, int quantity) {
+    public ProductInventory(long id, int quantity, Product product) {
         this.id = id;
         this.quantity = quantity;
+        this.product = product;
     }
 
     // Getters & Setters
@@ -37,5 +42,13 @@ public class ProductInventory {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 }

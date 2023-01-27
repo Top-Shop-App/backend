@@ -41,10 +41,13 @@ public class User {
     @Column
     private UserRole role;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private UserAddress userAddress;
+
     // Constructors
     public User() {}
 
-    public User(long id, String firstName, String lastName, String email, String username, String password, String telephone, String mobile, Date createdAt) {
+    public User(long id, String firstName, String lastName, String email, String username, String password, String telephone, String mobile, Date createdAt, UserRole role) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -54,9 +57,10 @@ public class User {
         this.telephone = telephone;
         this.mobile = mobile;
         this.createdAt = createdAt;
+        this.role = role;
     }
 
-    public User(String firstName, String lastName, String email, String username, String password, String telephone, String mobile, Date createdAt) {
+    public User(String firstName, String lastName, String email, String username, String password, String telephone, String mobile, Date createdAt, UserRole role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -138,5 +142,13 @@ public class User {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 }
