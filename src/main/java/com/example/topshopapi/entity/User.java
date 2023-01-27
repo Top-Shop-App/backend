@@ -2,6 +2,7 @@ package com.example.topshopapi.entity;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.util.Date;
 
 @Entity
@@ -13,19 +14,31 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "first_name")
+    @Column(name = "first_name", nullable = false)
+    @NotNull
+    @NotBlank
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false)
+    @NotNull
+    @NotBlank
     private String lastName;
 
     @Column(name = "email", nullable = false, unique = true)
+    @Email
+    @NotBlank
+    @NotNull
     private String email;
 
     @Column(name = "username", nullable = false, unique = true, length = 25)
+    @NotBlank
+    @NotNull
+    @Size(min = 4, max = 25)
     private String username;
 
     @Column(name = "password", nullable = false)
+    @NotBlank
+    @Size(min = 6, max = 255)
     private String password;
 
     @Column(name = "telephone", length = 10)
@@ -33,9 +46,6 @@ public class User {
 
     @Column(name = "mobile", length = 10)
     private String mobile;
-
-    @Column(name = "created_at", nullable = false)
-    private Date createdAt;
 
     @Enumerated(EnumType.STRING)
     @Column
@@ -47,7 +57,7 @@ public class User {
     // Constructors
     public User() {}
 
-    public User(long id, String firstName, String lastName, String email, String username, String password, String telephone, String mobile, Date createdAt, UserRole role) {
+    public User(long id, String firstName, String lastName, String email, String username, String password, String telephone, String mobile, UserRole role) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -56,7 +66,6 @@ public class User {
         this.password = password;
         this.telephone = telephone;
         this.mobile = mobile;
-        this.createdAt = createdAt;
         this.role = role;
     }
 
@@ -68,7 +77,6 @@ public class User {
         this.password = password;
         this.telephone = telephone;
         this.mobile = mobile;
-        this.createdAt = createdAt;
     }
 
     // Getters & Setters
@@ -134,14 +142,6 @@ public class User {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
     }
 
     public UserRole getRole() {
