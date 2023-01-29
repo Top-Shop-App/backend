@@ -7,13 +7,9 @@ import com.example.topshopapi.model.LoginBody;
 import com.example.topshopapi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
-@Transactional
 public class UserServiceImpl implements UserService {
 
     @Autowired

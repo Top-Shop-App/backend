@@ -1,6 +1,6 @@
 package com.example.topshopapi.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
