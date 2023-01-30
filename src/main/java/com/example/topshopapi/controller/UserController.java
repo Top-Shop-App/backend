@@ -47,20 +47,16 @@ public class UserController {
         }
     }
 
-    @GetMapping ("/user/")
-    public ResponseEntity<User> currentUser(Principal principal) {
-        User currentUser = userService.findByUsername(principal.getName());
-        return ResponseEntity.ok().body(currentUser);
+    // TODO: Change endpoint later on.
+    @GetMapping("/me")
+    public User getLoggedInUserProfile(@AuthenticationPrincipal User user) {
+        return user;
     }
+
 
     @DeleteMapping("/user/{id}/delete")
     public ResponseEntity<HttpStatus> deleteUser(@PathVariable long id) {
         userService.deleteUserById(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/me")
-    public User getLoggedInUserProfile(@AuthenticationPrincipal User user) {
-        return user;
     }
 }

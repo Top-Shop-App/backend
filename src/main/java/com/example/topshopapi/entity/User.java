@@ -1,6 +1,5 @@
 package com.example.topshopapi.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -41,8 +40,8 @@ public class User {
 
     @Column(name = "password", nullable = false)
     @NotBlank
+    @NotNull
     @Size(min = 6, max = 255)
-    @JsonIgnore
     private String password;
 
     @Column(name = "telephone", length = 10)
@@ -56,12 +55,12 @@ public class User {
     private UserRole role;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private UserAddress userAddress;
+    private Address address;
 
     // Constructors
     public User() {}
 
-    public User(long id, String firstName, String lastName, String email, String username, String password, String telephone, String mobile, UserRole role, UserAddress userAddress) {
+    public User(long id, String firstName, String lastName, String email, String username, String password, String telephone, String mobile, UserRole role, Address address) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -71,10 +70,10 @@ public class User {
         this.telephone = telephone;
         this.mobile = mobile;
         this.role = role;
-        this.userAddress = userAddress;
+        this.address = address;
     }
 
-    public User(String firstName, String lastName, String email, String username, String password, String telephone, String mobile, Date createdAt, UserRole role, UserAddress userAddress) {
+    public User(String firstName, String lastName, String email, String username, String password, String telephone, String mobile, Date createdAt, UserRole role, Address address) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -82,7 +81,7 @@ public class User {
         this.password = password;
         this.telephone = telephone;
         this.mobile = mobile;
-        this.userAddress = userAddress;
+        this.address = address;
     }
 
     // Getters & Setters
@@ -158,11 +157,11 @@ public class User {
         this.role = role;
     }
 
-    public UserAddress getUserAddress() {
-        return userAddress;
+    public Address getUserAddress() {
+        return address;
     }
 
-    public void setUserAddress(UserAddress userAddress) {
-        this.userAddress = userAddress;
+    public void setUserAddress(Address address) {
+        this.address = address;
     }
 }

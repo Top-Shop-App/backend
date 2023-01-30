@@ -3,8 +3,8 @@ package com.example.topshopapi.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "user_address")
-public class UserAddress {
+@Table(name = "address")
+public class Address {
 
     // Fields
     @Id
@@ -26,14 +26,15 @@ public class UserAddress {
     @Column(name = "country", nullable = false)
     private String country;
 
+    // One user can save one address to be associated to their account. (Optional)
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     // Constructors
-    public UserAddress() {}
+    public Address() {}
 
-    public UserAddress(long id, String addressLine1, String addressLine2, String city, int postalCode, String country, User user) {
+    public Address(long id, String addressLine1, String addressLine2, String city, int postalCode, String country, User user) {
         this.id = id;
         this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
@@ -43,7 +44,7 @@ public class UserAddress {
         this.user = user;
     }
 
-    public UserAddress(String addressLine1, String addressLine2, String city, int postalCode, String country, User user) {
+    public Address(String addressLine1, String addressLine2, String city, int postalCode, String country, User user) {
         this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
         this.city = city;

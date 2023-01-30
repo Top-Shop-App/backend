@@ -18,15 +18,11 @@ public class Product {
     @Column(name = "product_desc", length = 500)
     private String productDesc;
 
-    @Column(name = "product_sku", nullable = false, length = 50)
+    @Column(name = "product_sku", nullable = false, unique = true, length = 50)
     private String productSku;
 
     @Column(name = "product_price", nullable = false)
     private BigDecimal productPrice;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false, referencedColumnName = "id")
-    private ProductCategory productCategory;
 
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "inventory_id", nullable = false, referencedColumnName = "id")
@@ -35,22 +31,20 @@ public class Product {
     // Constructors
     public Product() {}
 
-    public Product(long id, String productName, String productDesc, String productSku, BigDecimal productPrice, ProductCategory productCategory, ProductInventory productInventory) {
+    public Product(long id, String productName, String productDesc, String productSku, BigDecimal productPrice, ProductInventory productInventory) {
         this.id = id;
         this.productName = productName;
         this.productDesc = productDesc;
         this.productSku = productSku;
         this.productPrice = productPrice;
-        this.productCategory = productCategory;
         this.productInventory = productInventory;
     }
 
-    public Product(String productName, String productDesc, String productSku, BigDecimal productPrice, ProductCategory productCategory, ProductInventory productInventory) {
+    public Product(String productName, String productDesc, String productSku, BigDecimal productPrice, ProductInventory productInventory) {
         this.productName = productName;
         this.productDesc = productDesc;
         this.productSku = productSku;
         this.productPrice = productPrice;
-        this.productCategory = productCategory;
         this.productInventory = productInventory;
     }
 
@@ -93,14 +87,6 @@ public class Product {
 
     public void setProductPrice(BigDecimal productPrice) {
         this.productPrice = productPrice;
-    }
-
-    public ProductCategory getProductCategory() {
-        return productCategory;
-    }
-
-    public void setProductCategory(ProductCategory productCategory) {
-        this.productCategory = productCategory;
     }
 
     public ProductInventory getProductInventory() {

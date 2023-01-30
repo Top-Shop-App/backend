@@ -6,8 +6,8 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "user_payments")
-public class UserPayment {
+@Table(name = "payment")
+public class Payment {
 
     // Fields
     @Id
@@ -26,16 +26,16 @@ public class UserPayment {
     @Column(name = "expir_date")
     private Date expirDate;
 
-    // Many payments can be saved to one user.
+    // Many payments can be saved to one user. (Optional)
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnoreProperties({"password", "created_at"})
+    @JsonIgnoreProperties({"password"})
     private User user;
 
     // Constructors
-    public UserPayment() {}
+    public Payment() {}
 
-    public UserPayment(long id, String paymentType, String provider, int accountNo, Date expirDate, User user) {
+    public Payment(long id, String paymentType, String provider, int accountNo, Date expirDate, User user) {
         this.id = id;
         this.paymentType = paymentType;
         this.provider = provider;
@@ -44,7 +44,7 @@ public class UserPayment {
         this.user = user;
     }
 
-    public UserPayment(String paymentType, String provider, int accountNo, Date expirDate, User user) {
+    public Payment(String paymentType, String provider, int accountNo, Date expirDate, User user) {
         this.paymentType = paymentType;
         this.provider = provider;
         this.accountNo = accountNo;
