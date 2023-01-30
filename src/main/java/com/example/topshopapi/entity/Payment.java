@@ -20,7 +20,7 @@ public class Payment {
     private String provider;
 
     @Column(name = "card_no", nullable = false)
-    private int cardNo;
+    private String cardNo;
 
     @Column(name = "cardholder_name", nullable = false)
     private String cardHolderName;
@@ -29,7 +29,7 @@ public class Payment {
     private String expirDate;
 
     @Column(name = "cvc_no", nullable = false, length = 3)
-    private int cvcNo;
+    private String cvcNo;
 
     // Many payments can be saved to one user. (Optional)
     @ManyToOne
@@ -40,7 +40,7 @@ public class Payment {
     // Constructors
     public Payment() {}
 
-    public Payment(long id, String paymentType, String provider, String cardHolderName, int cardNo, String expirDate, int cvcNo, User user) {
+    public Payment(long id, String paymentType, String provider, String cardHolderName, String cardNo, String expirDate, String cvcNo, User user) {
         this.id = id;
         this.paymentType = paymentType;
         this.provider = provider;
@@ -51,7 +51,7 @@ public class Payment {
         this.user = user;
     }
 
-    public Payment(String paymentType, String provider, int cardNo, String cardHolderName, String expirDate, int cvcNo, User user) {
+    public Payment(String paymentType, String provider, String cardNo, String cardHolderName, String expirDate, String cvcNo, User user) {
         this.paymentType = paymentType;
         this.provider = provider;
         this.cardHolderName = cardHolderName;
@@ -94,11 +94,11 @@ public class Payment {
         this.cardHolderName = cardHolderName;
     }
 
-    public int getCardNo() {
+    public String getCardNo() {
         return cardNo;
     }
 
-    public void setCardNo(int cardNo) {
+    public void setCardNo(String cardNo) {
         this.cardNo = cardNo;
     }
 
@@ -110,11 +110,11 @@ public class Payment {
         this.expirDate = expirDate;
     }
 
-    public int getCvcNo() {
+    public String getCvcNo() {
         return cvcNo;
     }
 
-    public void setCvcNo(int cvcNo) {
+    public void setCvcNo(String cvcNo) {
         this.cvcNo = cvcNo;
     }
 

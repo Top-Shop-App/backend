@@ -21,17 +21,17 @@ public class OrderProductDetails {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @Column(name = "order_total", nullable = false)
-    private BigDecimal orderTotal;
+    @Column(name = "quantity", nullable = false)
+    private int quantity;
 
     // Constructors
     public OrderProductDetails() {}
 
-    public OrderProductDetails(long id, OrderDetails orderDetails, Product product, BigDecimal orderTotal) {
+    public OrderProductDetails(long id, OrderDetails orderDetails, Product product, int quantity) {
         this.id = id;
         this.orderDetails = orderDetails;
         this.product = product;
-        this.orderTotal = orderTotal;
+        this.quantity = quantity;
     }
 
     // Getters & Setters
@@ -59,11 +59,11 @@ public class OrderProductDetails {
         this.product = product;
     }
 
-    public BigDecimal getOrderTotal() {
-        return orderTotal;
+    public int getOrderTotal() {
+        return quantity;
     }
 
-    public void setOrderTotal(BigDecimal orderTotal) {
-        this.orderTotal = orderTotal;
+    public void setOrderTotal(int quantity) {
+        this.quantity = quantity;
     }
 }
