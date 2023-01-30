@@ -1,7 +1,6 @@
 package com.example.topshopapi.entity;
 
 import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class OrderDetails {
     @JoinColumn(name = "payment_id", nullable = false)
     private Payment payment;
 
-    @OneToMany(mappedBy = "order_details", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "id", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<OrderProductDetails> orderProductDetails = new ArrayList<>();
 
     // Constructor
