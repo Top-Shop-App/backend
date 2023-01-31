@@ -1,5 +1,6 @@
 package com.example.topshopapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -16,6 +17,7 @@ public class ProductInventory {
 
     @OneToOne(orphanRemoval = true)
     @JoinColumn(name = "product_id", nullable = false, unique = true)
+    @JsonIgnore
     private Product product;
 
     // Constructors

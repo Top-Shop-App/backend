@@ -1,10 +1,12 @@
-package com.example.topshopapi.services;
+package com.example.topshopapi.services.user;
 
-import com.auth0.jwt.JWT;
 import com.example.topshopapi.entity.User;
 import com.example.topshopapi.entity.UserRole;
 import com.example.topshopapi.model.LoginBody;
 import com.example.topshopapi.repository.UserRepository;
+import com.example.topshopapi.services.EncryptionService;
+import com.example.topshopapi.services.JWTService;
+import com.example.topshopapi.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Optional;

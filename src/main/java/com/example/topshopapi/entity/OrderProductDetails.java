@@ -1,8 +1,7 @@
 package com.example.topshopapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
-import java.math.BigDecimal;
 
 @Entity
 @Table(name = "order_product_details")
@@ -15,6 +14,7 @@ public class OrderProductDetails {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "order_details_id", nullable = false)
+    @JsonIgnore
     private OrderDetails orderDetails;
 
     @ManyToOne(optional = false)

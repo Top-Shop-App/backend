@@ -1,4 +1,4 @@
-package com.example.topshopapi.services;
+package com.example.topshopapi.services.user;
 
 import com.example.topshopapi.entity.User;
 import com.example.topshopapi.model.LoginBody;

@@ -3,7 +3,7 @@ package com.example.topshopapi.controller;
 import com.example.topshopapi.entity.User;
 import com.example.topshopapi.model.LoginBody;
 import com.example.topshopapi.model.LoginResponse;
-import com.example.topshopapi.services.UserService;
+import com.example.topshopapi.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import jakarta.validation.Valid;
 import java.net.URI;
-import java.security.Principal;
 
 @RestController
 @CrossOrigin(allowedHeaders = "*", origins = "http://localhost:3000")
