@@ -1,5 +1,6 @@
 package com.example.topshopapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -29,6 +30,7 @@ public class Address {
     // One user can save one address to be associated to their account. (Optional)
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     // Constructors
