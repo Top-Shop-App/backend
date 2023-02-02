@@ -16,7 +16,7 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    // Method returns all orders belong to user that was passed in.
+    // Method returns all orders belonging only to the user that was passed in.
     public List<OrderDetails> getOrders(User user) {
         return orderRepository.findByUser(user);
     }
