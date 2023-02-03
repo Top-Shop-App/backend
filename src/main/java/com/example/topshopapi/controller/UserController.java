@@ -1,6 +1,8 @@
 package com.example.topshopapi.controller;
 
 import com.example.topshopapi.entity.User;
+import com.example.topshopapi.exception.EmailFailureException;
+import com.example.topshopapi.exception.UserNotVerifiedException;
 import com.example.topshopapi.model.LoginBody;
 import com.example.topshopapi.model.LoginResponse;
 import com.example.topshopapi.services.user.UserService;
@@ -24,24 +26,52 @@ public class UserController {
     // Mappings
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@Valid @RequestBody User user) {
+        // TODO: Create RegisterBody model to fix "because the return value of "com.example.topshopapi.entity.User.getVerificationTokens()" is null"
         try {
             // Sends a 201 status, meaning a new resource (user) has been successfully created.
             URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/register").toUriString());
-
             return ResponseEntity.created(uri).body(userService.saveUser(user));
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | EmailFailureException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity verifyEmail(@RequestParam String token) {
+        if (userService.verifyUser(token)) {
+            return ResponseEntity.ok().build();
+        } else {
+            // Either user is already verified, or token doesn't exist.
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> loginUser(@Valid @RequestBody LoginBody loginBody) {
-        String jwt = userService.loginUser(loginBody);
+        String jwt = null;
+        try {
+            jwt = userService.loginUser(loginBody);
+        } catch (UserNotVerifiedException e) {
+            // If user is not verified, send response with reason.
+            LoginResponse loginResponse = new LoginResponse();
+            loginResponse.setSuccess(false);
+            String reason = "USER_NOT_VERIFIED";
+            // If email verification was sent, add message to end of reason.
+            if (e.isNewEmailSent()) {
+                reason += "_EMAIL_RESENT";
+            }
+            loginResponse.setFailureReason(reason);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(loginResponse);
+        } catch (EmailFailureException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
         if (jwt == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } else {
             LoginResponse response = new LoginResponse();
             response.setJwt(jwt);
+            response.setSuccess(true);
             return ResponseEntity.ok(response);
         }
     }

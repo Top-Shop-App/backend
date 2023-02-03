@@ -1,12 +1,12 @@
 package com.example.topshopapi.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -57,6 +57,13 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Address address;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("id desc")
+    private List<VerificationToken> verificationTokens;
+
+    @Column(name = "email_verified", nullable = false)
+    private boolean isEmailVerified = false;
 
     // Constructors
     public User() {}
@@ -164,5 +171,29 @@ public class User {
 
     public void setUserAddress(Address address) {
         this.address = address;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public List<VerificationToken> getVerificationTokens() {
+        return verificationTokens;
+    }
+
+    public void setVerificationTokens(List<VerificationToken> verificationTokens) {
+        this.verificationTokens = verificationTokens;
+    }
+
+    public boolean isEmailVerified() {
+        return isEmailVerified;
+    }
+
+    public void setEmailVerified(boolean isEmailVerified) {
+        this.isEmailVerified = isEmailVerified;
     }
 }

@@ -2,13 +2,20 @@ package com.example.topshopapi.services.user;
 
 import com.example.topshopapi.entity.User;
 import com.example.topshopapi.entity.UserRole;
+import com.example.topshopapi.entity.VerificationToken;
+import com.example.topshopapi.exception.EmailFailureException;
+import com.example.topshopapi.exception.UserNotVerifiedException;
 import com.example.topshopapi.model.LoginBody;
 import com.example.topshopapi.repository.UserRepository;
+import com.example.topshopapi.repository.VerificationTokenRepository;
+import com.example.topshopapi.services.EmailService;
 import com.example.topshopapi.services.EncryptionService;
 import com.example.topshopapi.services.JWTService;
-import com.example.topshopapi.services.user.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,35 +24,84 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private VerificationTokenRepository verificationTokenRepository;
+
     private final EncryptionService encryptionService;
 
     private JWTService jwtService;
 
+    private EmailService emailService;
+
     // Constructor
-    public UserServiceImpl(EncryptionService encryptionService, JWTService jwtService) {
+    public UserServiceImpl(EncryptionService encryptionService, JWTService jwtService, EmailService emailService) {
         this.encryptionService = encryptionService;
         this.jwtService = jwtService;
+        this.emailService = emailService;
     }
 
-    public String loginUser(LoginBody loginBody){
+    public String loginUser(LoginBody loginBody) throws UserNotVerifiedException, EmailFailureException {
         Optional<User> userToLogin = Optional.ofNullable(userRepository.findByUsername(loginBody.getUsername()));
         if (userToLogin.isPresent()) {
             User user = userToLogin.get();
             if (encryptionService.verifyPassword(loginBody.getPassword(), user.getPassword())) {
-                return jwtService.generateJWT(user);
+                if (user.isEmailVerified()) {
+                    return jwtService.generateJWT(user);
+                } else {
+                    List<VerificationToken> verificationTokens = user.getVerificationTokens();
+                    boolean resendVerificationEmail = verificationTokens.size() == 0 || verificationTokens.get(0).getCreatedTimestamp().before(new Timestamp(System.currentTimeMillis() - (60 * 60 * 1000)));
+                    // If there is no tokens in list of verificationTokens or if newest token in list was created before an hour ago
+                    // create another verification token and resend verification email to user.
+                    if (resendVerificationEmail) {
+                        VerificationToken verificationToken = createVerificationToken(user);
+                        verificationTokenRepository.save(verificationToken);
+                        emailService.sendVerificationEmail(verificationToken);
+                    }
+                    throw new UserNotVerifiedException(resendVerificationEmail);
+                }
             }
         }
         return null;
     }
 
-    @Override
-    public User saveUser(User user) {
-        // Encrypting the user's password before saving to the database.
-        user.setPassword(encryptionService.encryptPassword(user.getPassword()));
+    private VerificationToken createVerificationToken(User user) {
+        VerificationToken verificationToken = new VerificationToken();
+        verificationToken.setToken(jwtService.generateVerificationJWT(user));
+        verificationToken.setCreatedTimestamp(new Timestamp(System.currentTimeMillis()));
+        verificationToken.setUser(user);
+        user.getVerificationTokens().add(verificationToken);
+        return verificationToken;
+    }
 
+    @Transactional
+    @Override
+    public boolean verifyUser(String token) {
+        // Looking for token in DB.
+        Optional<VerificationToken> opToken = verificationTokenRepository.findByToken(token);
+        if (opToken.isPresent()) {
+            VerificationToken verificationToken = opToken.get();
+            User user = verificationToken.getUser();
+            if (!user.isEmailVerified()) {
+                user.setEmailVerified(true);
+                userRepository.save(user);
+                verificationTokenRepository.deleteByUser(user);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public User saveUser(User user) throws EmailFailureException {
         // Setting the user's role.
         user.setRole(UserRole.USER);
-
+        // Encrypting the user's password before saving to the database.
+        user.setPassword(encryptionService.encryptPassword(user.getPassword()));
+        // Creating verification token for user to send for email verification.
+        VerificationToken verificationToken = createVerificationToken(user);
+        // Sending verification email.
+        emailService.sendVerificationEmail(verificationToken);
+        // Saving user to DB.
         return userRepository.save(user);
     }
 
