@@ -4,8 +4,10 @@ import com.example.topshopapi.entity.User;
 import com.example.topshopapi.entity.UserRole;
 import com.example.topshopapi.entity.VerificationToken;
 import com.example.topshopapi.exception.EmailFailureException;
+import com.example.topshopapi.exception.UserAlreadyExistsException;
 import com.example.topshopapi.exception.UserNotVerifiedException;
 import com.example.topshopapi.model.LoginBody;
+import com.example.topshopapi.model.RegistrationBody;
 import com.example.topshopapi.repository.UserRepository;
 import com.example.topshopapi.repository.VerificationTokenRepository;
 import com.example.topshopapi.services.EmailService;
@@ -92,11 +94,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUser(User user) throws EmailFailureException {
-        // Setting the user's role.
+    public User registerUser(RegistrationBody registrationBody) throws UserAlreadyExistsException, EmailFailureException {
+        if (userRepository.findByEmailIgnoreCase(registrationBody.getEmail()).isPresent()
+                || userRepository.findByUsernameIgnoreCase(registrationBody.getUsername()).isPresent()) {
+            throw new UserAlreadyExistsException();
+        }
+        User user = new User();
+        user.setFirstName(registrationBody.getFirstName());
+        user.setLastName(registrationBody.getLastName());
+        user.setUsername(registrationBody.getUsername());
+        user.setEmail(registrationBody.getEmail());
+        user.setPassword(encryptionService.encryptPassword(registrationBody.getPassword()));
+        user.setMobile(registrationBody.getMobile());
         user.setRole(UserRole.USER);
-        // Encrypting the user's password before saving to the database.
-        user.setPassword(encryptionService.encryptPassword(user.getPassword()));
         // Creating verification token for user to send for email verification.
         VerificationToken verificationToken = createVerificationToken(user);
         // Sending verification email.

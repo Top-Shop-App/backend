@@ -2,18 +2,20 @@ package com.example.topshopapi.controller;
 
 import com.example.topshopapi.entity.User;
 import com.example.topshopapi.exception.EmailFailureException;
+import com.example.topshopapi.exception.UserAlreadyExistsException;
 import com.example.topshopapi.exception.UserNotVerifiedException;
 import com.example.topshopapi.model.LoginBody;
 import com.example.topshopapi.model.LoginResponse;
+import com.example.topshopapi.model.RegistrationBody;
 import com.example.topshopapi.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import jakarta.validation.Valid;
-import java.net.URI;
+
+import java.util.Arrays;
 
 @RestController
 @CrossOrigin(allowedHeaders = "*", origins = "http://localhost:3000")
@@ -25,13 +27,15 @@ public class UserController {
 
     // Mappings
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@Valid @RequestBody User user) {
-        // TODO: Create RegisterBody model to fix "because the return value of "com.example.topshopapi.entity.User.getVerificationTokens()" is null"
+    public ResponseEntity registerUser(@Valid @RequestBody RegistrationBody registrationBody) {
         try {
-            // Sends a 201 status, meaning a new resource (user) has been successfully created.
-            URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/register").toUriString());
-            return ResponseEntity.created(uri).body(userService.saveUser(user));
-        } catch (IllegalArgumentException | EmailFailureException e) {
+            userService.registerUser(registrationBody);
+            return ResponseEntity.ok().build();
+        } catch (UserAlreadyExistsException ex) {
+            System.out.println(Arrays.toString(ex.getStackTrace()));
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } catch (EmailFailureException e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }

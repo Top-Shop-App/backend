@@ -1,10 +1,13 @@
 package com.example.topshopapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,31 +21,19 @@ public class User {
     private long id;
 
     @Column(name = "first_name", nullable = false)
-    @NotNull
-    @NotBlank
     private String firstName;
 
     @Column(name = "last_name", nullable = false)
-    @NotNull
-    @NotBlank
     private String lastName;
 
-    @Column(name = "email", nullable = false, unique = true)
-    @Email
-    @NotBlank
-    @NotNull
+    @Column(name = "email", nullable = false, unique = true, length = 320)
     private String email;
 
     @Column(name = "username", nullable = false, unique = true, length = 25)
-    @NotBlank
-    @NotNull
-    @Size(min = 4, max = 25)
     private String username;
 
-    @Column(name = "password", nullable = false)
-    @NotBlank
-    @NotNull
-    @Size(min = 6, max = 255)
+    @Column(name = "password", nullable = false, length = 1000)
+    @JsonIgnore
     private String password;
 
     @Column(name = "telephone", length = 10)
@@ -60,13 +51,23 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("id desc")
-    private List<VerificationToken> verificationTokens;
+    private List<VerificationToken> verificationTokens = new ArrayList<>();
 
     @Column(name = "email_verified", nullable = false)
     private boolean isEmailVerified = false;
 
     // Constructors
     public User() {}
+
+    public User(String firstName, String lastName, String email, String username, String password, String mobile, UserRole role) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.mobile = mobile;
+        this.role = role;
+    }
 
     public User(long id, String firstName, String lastName, String email, String username, String password, String telephone, String mobile, UserRole role, Address address) {
         this.id = id;
